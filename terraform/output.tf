@@ -1,29 +1,39 @@
-# Output the ECR Repository URI for the frontend
-output "frontend_repo_uri" {
-  description = "URI of the frontend ECR repository"
-  value       = aws_ecr_repository.frontend.repository_url
+output "frontend_service_name" {
+  value = aws_ecs_service.frontend_service.name
 }
 
-# Output the ECR Repository URI for the backend
-output "backend_repo_uri" {
-  description = "URI of the backend ECR repository"
-  value       = aws_ecr_repository.backend.repository_url
+output "frontend_task_definition_arn" {
+  value = aws_ecs_task_definition.frontend_task.arn
 }
 
-# Output the ECS Cluster Name
-output "ecs_cluster_name" {
-  description = "The ECS Cluster name"
-  value       = aws_ecs_cluster.ecs_cluster.name
+output "frontend_lb_dns_name" {
+  value = aws_lb.frontend_lb.dns_name
 }
 
-# Output the ECS Service Name
-output "ecs_service_name" {
-  description = "The ECS Service name"
-  value       = aws_ecs_service.frontend_service.name
+output "backend_service_name" {
+  value = aws_ecs_service.backend_service.name
 }
 
-# Output the ECS Task Definition ARN
-output "ecs_task_definition" {
-  description = "The ECS Task Definition ARN"
-  value       = aws_ecs_task_definition.frontend_task_definition.arn
+output "backend_task_definition_arn" {
+  value = aws_ecs_task_definition.backend_task.arn
+}
+
+output "db_endpoint" {
+  value = aws_db_instance.default.endpoint
+}
+
+output "db_username" {
+  value = aws_db_instance.default.username
+}
+
+output "db_name" {
+  value = aws_db_instance.default.db_name
+}
+
+output "db_identifier" {
+  value = aws_db_instance.default.id
+}
+
+output "db_instance_arn" {
+  value = aws_db_instance.default.arn
 }
