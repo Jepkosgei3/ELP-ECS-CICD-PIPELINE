@@ -88,36 +88,36 @@ jobs:
     #     mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} backend-db < ./ELP_PATH_DB/elp_path_db_16.sql
     #     echo "Database initialization complete!"
 
-    # # Step 8: Build and Push Backend Docker image to ECR
-    # - name: Build and Push Backend Docker image
+    # Step 8: Build and Push Backend Docker image to ECR
+    - name: Build and Push Backend Docker image
+      run: |
+        docker build -t backend-app ./ELP_PATH_BE  # Adjust path to your backend Dockerfile directory
+        docker tag backend-app:latest ${{ secrets.BACKEND_REPO_URI }}:latest
+        docker push ${{ secrets.BACKEND_REPO_URI }}:latest
+
+    # Step 9: Deploy ECS Service for Frontend
+    # - name: Deploy ECS frontend service
     #   run: |
-    #     docker build -t backend-app ./ELP_PATH_BE  # Adjust path to your backend Dockerfile directory
-    #     docker tag backend-app:latest ${{ secrets.BACKEND_REPO_URI }}:latest
-    #     docker push ${{ secrets.BACKEND_REPO_URI }}:latest
+    #     echo "Updating ECS Frontend Service..."
+    #     FRONTEND_TASK_DEFINITION_ARN=${{ secrets.FRONTEND_TASK_DEFINITION_ARN }}
+    #     aws ecs update-service --cluster frontend-cluster --service frontend-service --task-definition $FRONTEND_TASK_DEFINITION_ARN
 
-    # # Step 9: Deploy ECS Service for Frontend
-    # # - name: Deploy ECS frontend service
-    # #   run: |
-    # #     echo "Updating ECS Frontend Service..."
-    # #     FRONTEND_TASK_DEFINITION_ARN=${{ secrets.FRONTEND_TASK_DEFINITION_ARN }}
-    # #     aws ecs update-service --cluster frontend-cluster --service frontend-service --task-definition $FRONTEND_TASK_DEFINITION_ARN
+    # Step 10: Deploy ECS Service for Backend
+    - name: Deploy ECS backend service
+      run: |
+        echo "Updating ECS Backend Service..."
+        BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
+        aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN
 
-    # # Step 10: Deploy ECS Service for Backend
-    # - name: Deploy ECS backend service
-    #   run: |
-    #     echo "Updating ECS Backend Service..."
-    #     BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
-    #     aws ecs update-service --cluster backend-cluster --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN
-
-    # # Step 11: Verify ECS services are running
-    # # - name: Verify ECS services
-    # #   run: |
-    # #     aws ecs describe-services --cluster frontend-cluster --services frontend-service
-    # #     aws ecs describe-services --cluster backend-cluster --services backend-service  
-
+    # Step 11: Verify ECS services are running
     # - name: Verify ECS services
     #   run: |
-    #      aws ecs describe-services --cluster backend-cluster --services backend-service 
+    #     aws ecs describe-services --cluster frontend-cluster --services frontend-service
+    #     aws ecs describe-services --cluster backend-cluster --services backend-service  
+
+    - name: Verify ECS services
+      run: |
+         aws ecs describe-services --cluster my-cluster-back --services backend-service 
 
     # - name: Install MySQL Client
     #   run: sudo apt-get install mysql-client -y
@@ -140,24 +140,24 @@ jobs:
     #     mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} mydb < ./ELP_PATH_DB/elp_path_db_16.sql
     #     echo "Database initialization complete!"
 
-    - name: Build and Push Backend Docker image
-      run: |
-        docker build -t backend-app ./ELP_PATH_BE
-        docker tag backend-app:latest ${{ secrets.BACKEND_REPO_URI }}:${{ github.sha }}
-        docker push ${{ secrets.BACKEND_REPO_URI }}:${{ github.sha }}
+    # - name: Build and Push Backend Docker image
+    #   run: |
+    #     docker build -t backend-app ./ELP_PATH_BE
+    #     docker tag backend-app:latest ${{ secrets.BACKEND_REPO_URI }}:${{ github.sha }}
+    #     docker push ${{ secrets.BACKEND_REPO_URI }}:${{ github.sha }}
 
-    - name: Deploy ECS backend service
-      run: |
-        echo "Updating ECS Backend Service..."
-        BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
-        if aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN; then
-        echo "ECS Service updated successfully."
-        else
-        echo "ECS Service update failed!" >&2
-        exit 1
-        fi
+    # - name: Deploy ECS backend service
+    #   run: |
+    #     echo "Updating ECS Backend Service..."
+    #     BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
+    #     if aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN; then
+    #     echo "ECS Service updated successfully."
+    #     else
+    #     echo "ECS Service update failed!" >&2
+    #     exit 1
+    #     fi
 
-    - name: Verify ECS services
-      run: |
-        aws ecs describe-services --cluster my-cluster-back --services backend-service
+    # - name: Verify ECS services
+    #   run: |
+    #     aws ecs describe-services --cluster my-cluster-back --services backend-service
 
