@@ -137,7 +137,7 @@ jobs:
         echo "Failed to retrieve RDS endpoint!" >&2
         exit 1
         fi
-        mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} backend-db < ./ELP_PATH_DB/elp_path_db_16.sql
+        mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} mydb < ./ELP_PATH_DB/elp_path_db_16.sql
         echo "Database initialization complete!"
 
     - name: Build and Push Backend Docker image
