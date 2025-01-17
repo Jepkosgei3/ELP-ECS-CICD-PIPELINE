@@ -119,26 +119,26 @@ jobs:
     #   run: |
     #      aws ecs describe-services --cluster backend-cluster --services backend-service 
 
-    - name: Install MySQL Client
-      run: sudo apt-get install mysql-client -y
+    # - name: Install MySQL Client
+    #   run: sudo apt-get install mysql-client -y
 
-    - name: Initialize MySQL Database
-      run: |
-        echo "Waiting for the RDS MySQL instance to be available..."
-        for i in {1..10}; do
-        RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[?DBInstanceIdentifier=='backend-db'].Endpoint.Address" --output text)
-        if [[ -n "$RDS_ENDPOINT" ]]; then
-        echo "RDS Endpoint: $RDS_ENDPOINT"
-        break
-        fi
-        sleep 10
-        done
-        if [[ -z "$RDS_ENDPOINT" ]]; then
-        echo "Failed to retrieve RDS endpoint!" >&2
-        exit 1
-        fi
-        mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} mydb < ./ELP_PATH_DB/elp_path_db_16.sql
-        echo "Database initialization complete!"
+    # - name: Initialize MySQL Database
+    #   run: |
+    #     echo "Waiting for the RDS MySQL instance to be available..."
+    #     for i in {1..10}; do
+    #     RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[?DBInstanceIdentifier=='backend-db'].Endpoint.Address" --output text)
+    #     if [[ -n "$RDS_ENDPOINT" ]]; then
+    #     echo "RDS Endpoint: $RDS_ENDPOINT"
+    #     break
+    #     fi
+    #     sleep 10
+    #     done
+    #     if [[ -z "$RDS_ENDPOINT" ]]; then
+    #     echo "Failed to retrieve RDS endpoint!" >&2
+    #     exit 1
+    #     fi
+    #     mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} mydb < ./ELP_PATH_DB/elp_path_db_16.sql
+    #     echo "Database initialization complete!"
 
     - name: Build and Push Backend Docker image
       run: |
@@ -150,7 +150,7 @@ jobs:
       run: |
         echo "Updating ECS Backend Service..."
         BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
-        if aws ecs update-service --cluster backend-cluster --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN; then
+        if aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN; then
         echo "ECS Service updated successfully."
         else
         echo "ECS Service update failed!" >&2
@@ -159,5 +159,5 @@ jobs:
 
     - name: Verify ECS services
       run: |
-        aws ecs describe-services --cluster backend-cluster --services backend-service
+        aws ecs describe-services --cluster my-cluster-back --services backend-service
 
