@@ -69,11 +69,11 @@ jobs:
     #   run: npm install && npm run build --if-present
 
       # Step 7: Build and Push Frontend Docker image to ECR
-    - name: Build and Push Frontend Docker image
-      run: |
-        docker build -t angular-app ./ELP_PATH_FE  # Adjust path if needed
-        docker tag angular-app:latest ${{ secrets.FRONTEND_REPO_URI }}:latest
-        docker push ${{ secrets.FRONTEND_REPO_URI }}:latest
+    # - name: Build and Push Frontend Docker image
+    #   run: |
+    #     docker build -t angular-app ./ELP_PATH_FE  # Adjust path if needed
+    #     docker tag angular-app:latest ${{ secrets.FRONTEND_REPO_URI }}:latest
+    #     docker push ${{ secrets.FRONTEND_REPO_URI }}:latest
         
     - name: Install MySQL Client
       run: sudo apt-get install mysql-client -y  # Install MySQL client for running queries
@@ -96,11 +96,11 @@ jobs:
         docker push ${{ secrets.BACKEND_REPO_URI }}:latest
 
     # Step 9: Deploy ECS Service for Frontend
-    - name: Deploy ECS frontend service
-      run: |
-        echo "Updating ECS Frontend Service..."
-        FRONTEND_TASK_DEFINITION_ARN=${{ secrets.FRONTEND_TASK_DEFINITION_ARN }}
-        aws ecs update-service --cluster frontend-cluster --service frontend-service --task-definition $FRONTEND_TASK_DEFINITION_ARN
+    # - name: Deploy ECS frontend service
+    #   run: |
+    #     echo "Updating ECS Frontend Service..."
+    #     FRONTEND_TASK_DEFINITION_ARN=${{ secrets.FRONTEND_TASK_DEFINITION_ARN }}
+    #     aws ecs update-service --cluster frontend-cluster --service frontend-service --task-definition $FRONTEND_TASK_DEFINITION_ARN
 
     # Step 10: Deploy ECS Service for Backend
     - name: Deploy ECS backend service
@@ -110,8 +110,12 @@ jobs:
         aws ecs update-service --cluster backend-cluster --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN
 
     # Step 11: Verify ECS services are running
+    # - name: Verify ECS services
+    #   run: |
+    #      aws ecs describe-services --cluster frontend-cluster --services frontend-service
+    #     aws ecs describe-services --cluster backend-cluster --services backend-service  
+
     - name: Verify ECS services
       run: |
-        aws ecs describe-services --cluster frontend-cluster --services frontend-service
-        aws ecs describe-services --cluster backend-cluster --services backend-service  
-
+         aws ecs describe-services --cluster backend-cluster --services backend-service 
+         
