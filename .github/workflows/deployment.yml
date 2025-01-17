@@ -112,7 +112,7 @@ jobs:
     # Step 11: Verify ECS services are running
     # - name: Verify ECS services
     #   run: |
-    #      aws ecs describe-services --cluster frontend-cluster --services frontend-service
+    #     aws ecs describe-services --cluster frontend-cluster --services frontend-service
     #     aws ecs describe-services --cluster backend-cluster --services backend-service  
 
     - name: Verify ECS services
