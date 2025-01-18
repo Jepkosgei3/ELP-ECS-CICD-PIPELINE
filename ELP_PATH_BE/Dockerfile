@@ -39,7 +39,7 @@ COPY pom.xml .
 
 # Copy source code
 COPY src ./src
-
+RUN chmod +x mvnw
 # Run Maven to build the application
 RUN ./mvnw clean package -DskipTests && rm -rf /root/.m2/repository
 
