@@ -41,7 +41,7 @@ COPY pom.xml .
 COPY src ./src
 RUN chmod +x mvnw
 # Run Maven to build the application
-RUN ./mvnw clean package -DskipTests && rm -rf /root/.m2/repository
+RUN ./mvn clean package -DskipTests && rm -rf /root/.m2/repository
 
 # Stage 2: Run the Spring Boot application with OpenJDK
 # Stage 2: Run the Spring Boot application with OpenJDK
