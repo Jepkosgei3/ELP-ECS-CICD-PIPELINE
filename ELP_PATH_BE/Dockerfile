@@ -44,7 +44,8 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests && rm -rf /root/.m2/repository
 
 # Stage 2: Run the Spring Boot application with OpenJDK
-FROM openjdk:17.0.3-slim
+# Stage 2: Run the Spring Boot application with OpenJDK
+FROM openjdk:17-slim
 
 # Set working directory in the container
 WORKDIR /app
@@ -61,4 +62,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 # Define the command to run your Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
