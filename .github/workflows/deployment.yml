@@ -81,4 +81,4 @@ jobs:
 
     - name: Verify ECS services
       run: |
-         aws ecs describe-services --cluster my-cluster-back --services backend-service 
+         aws ecs describe-services --cluster my-cluster-back --services backend-service  
