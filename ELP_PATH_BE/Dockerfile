@@ -24,7 +24,7 @@ COPY --from=build /build/target/*.jar app.jar
 EXPOSE 8081
 
 # # Define the command to run your Spring Boot application
-# ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 
 # Stage 1: Build the Java application using Maven
