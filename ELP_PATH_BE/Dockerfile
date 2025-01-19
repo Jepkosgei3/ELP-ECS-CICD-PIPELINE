@@ -4,8 +4,6 @@ FROM maven:3.8.4-openjdk-17-slim AS build
 WORKDIR /build
 
 # Copy the Maven files first (pom.xml), then the source code to take advantage of Docker layer caching
-COPY .mvn/ .mvn
-COPY mvnw .
 COPY pom.xml . 
 COPY src ./src
 
@@ -24,8 +22,6 @@ COPY --from=build /build/target/*.jar app.jar
 
 # Expose the port your Spring Boot application will run on
 EXPOSE 8081
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD curl --fail http://localhost:8080/actuator/health || exit 1
 
 # # Define the command to run your Spring Boot application
 # ENTRYPOINT ["java", "-jar", "app.jar"]
