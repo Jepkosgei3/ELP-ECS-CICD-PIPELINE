@@ -71,8 +71,8 @@ jobs:
       run: |
         echo "Updating ECS Backend Service..."
         BACKEND_TASK_DEFINITION_ARN=${{ secrets.BACKEND_TASK_DEFINITION_ARN }}
-        aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN
-
+        aws ecs update-service --cluster my-cluster-back --service backend-service --task-definition $BACKEND_TASK_DEFINITION_ARN --force-new-deployment
+   
     # # Step 11: Verify ECS services are running
     # # - name: Verify ECS services
     # #   run: |
