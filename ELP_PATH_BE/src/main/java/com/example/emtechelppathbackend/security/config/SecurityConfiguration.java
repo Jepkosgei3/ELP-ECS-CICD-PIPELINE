@@ -24,7 +24,7 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
     private static final String[] WHITE_LIST_URL = {
-                       "/swagger-ui/**"
+                       ":8081/swagger-ui/**", 
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -33,10 +33,8 @@ public class SecurityConfiguration {
         httpSecurity.csrf(csrf -> csrf.disable())//disabling csfr
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         //non authorization requiring requests
-                        .requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
+                              
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/auth/register","/auth/authenticate", "/auth/confirm/scholar-email",  "/join-request/**", "/reset-password/**","/v3/api-docs/**", "/swagger-ui/**", "/images/**").permitAll()
                         .requestMatchers(OPTIONS).permitAll()
