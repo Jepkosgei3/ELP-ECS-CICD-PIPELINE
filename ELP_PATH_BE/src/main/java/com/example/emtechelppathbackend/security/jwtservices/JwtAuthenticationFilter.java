@@ -26,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final UserDetailsService userDetailsService;
+    private static final String[] EXCLUDED_PATHS = {"/api/db/**", "/swagger-ui/**", "/health"};
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
