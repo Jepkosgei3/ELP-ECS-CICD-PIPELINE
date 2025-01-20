@@ -65,4 +65,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //call the filter chain, handing over the filter for the next filtering
         filterChain.doFilter(request, response);
     }
+      private boolean shouldBypassJwt(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        // Specify URLs that should bypass JWT authentication
+        return requestURI.startsWith("/join-request") || requestURI.startsWith("/healthcheck");
+    }
 }
