@@ -15,14 +15,13 @@ public class CorsConfig {
 
 
     @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 //        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin: *", "Access-Control-Allow-Credentials: Origin, Content-Type, X-Auth-Token, Authorization, Accept"));
-        configuration.setAllowedHeaders(Collections.asList("*")); //deploying
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization")); //deploying
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
