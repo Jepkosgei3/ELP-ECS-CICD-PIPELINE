@@ -72,4 +72,9 @@ public class AuthenticationController {
 
         return ResponseEntity.status(result.getStatusCode()).body(result);
     }
+    @GetMapping("/join-request/{scholarCode}/join")
+    public ResponseEntity<?> joinRequest(@PathVariable String scholarCode) {
+    // Add your logic to handle the join request
+    return ResponseEntity.ok("Request for scholar code " + scholarCode + " has been processed.");
+}
 }
