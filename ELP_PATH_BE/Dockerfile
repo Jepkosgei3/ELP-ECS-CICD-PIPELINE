@@ -1,25 +1,31 @@
-# Stage 1: Build the Java application using Maven
-FROM maven:3.8.4-openjdk-17-slim AS build
+# Stage 1: Build the application
+FROM maven:3.8.6-openjdk-17 AS build
 
-WORKDIR /build
+# Set the working directory
+WORKDIR /app
 
-# Copy the Maven project files first to utilize Docker layer caching
+# Copy the pom.xml and download dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy the application source code
 COPY src ./src
 
 # Build the application, skipping tests for faster builds
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run the Spring Boot application with OpenJDK
-FROM openjdk:17-slim
+# Stage 2: Create a lightweight runtime image
+FROM openjdk:17-jdk-slim
 
+# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file from the Maven build stage
-COPY --from=build /build/target/*.jar app.jar
+# Copy the Spring Boot application JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose the port used by the application
+# Expose the application port
 EXPOSE 8081
 
-# Run the application
+# Run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
