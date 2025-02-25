@@ -41,7 +41,15 @@ jobs:
         mysql -h $RDS_ENDPOINT -u root -p${{ secrets.DB_PASSWORD }} mydb < ./ELP_PATH_DB/elp_path_db_16.sql
         echo "Database initialization complete!"
 
-    # Step 6: Build and Push Backend Docker image to ECR
+     # Step 6: Build and Push Frontend Docker image to ECR
+    - name: Build and Push Frontend
+      run: |
+        docker build -t angular-app ./ELP_PATH_FE
+        docker tag angular-app:latest ${{ secrets.FRONTEND_REPO_URI }}:latest
+        docker push ${{ secrets.FRONTEND_REPO_URI }}:latest
+
+
+    # Step 7: Build and Push Backend Docker image to ECR
     - name: Build and Push Backend Docker image
       run: |
         docker build -t backend-app ./ELP_PATH_BE  # Adjust path to your backend Dockerfile directory
@@ -50,6 +58,13 @@ jobs:
 
   
     # Step 7: Deploy ECS Service for Backend
+    - name: Update ECS Frontend Service with New Images 
+      run: |
+        aws ecs update-service \
+        --cluster my-cluster \
+        --service frontend-service \
+        --force-new-deployment
+   # Step 8: Deploy ECS Service for Backend
     - name: Deploy ECS backend service
       run: |
         echo "Updating ECS Backend Service..."
